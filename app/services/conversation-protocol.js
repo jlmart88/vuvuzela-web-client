@@ -1,4 +1,6 @@
 export default Ember.Service.extend({
-    nextConvoRequest: null,
+    nextConvoRequest: function(round) {
+        
+    },
     handleConvoResponse: function() {}
 });

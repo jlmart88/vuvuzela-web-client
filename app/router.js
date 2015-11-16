@@ -9,7 +9,7 @@ Router.map(function() {
     this.route('auth', function() {
         this.route('login');
     });
-    this.route('client');
+    this.resource('client', function(){});
 });
 
 export default Router;

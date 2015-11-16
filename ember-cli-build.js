@@ -20,5 +20,8 @@ module.exports = function(defaults) {
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
 
+  app.import('bower_components/js-nacl/lib/nacl_factory.js');
+  app.import('bower_components/base32/lib/base32.js');
+
   return app.toTree();
 };
