@@ -22,6 +22,8 @@ module.exports = function(defaults) {
 
   app.import('bower_components/js-nacl/lib/nacl_factory.js');
   app.import('bower_components/base32/lib/base32.js');
+  app.import('bower_components/moment/moment.js');
+  app.import('bower_components/jsSHA/src/sha.js');
 
   return app.toTree();
 };

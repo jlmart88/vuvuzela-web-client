@@ -1,7 +1,7 @@
 import nacl from './nacl';
 
 export default {
-    overhead: 48, // 32 + 16
+    overhead: 48, // 32 (key size) + 16 (box.overhead)
     seal: function(messageBytes, nonce, publicKeys) {
         //console.log('Sealing: ' + message)
         var onion = messageBytes,

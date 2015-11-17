@@ -20,6 +20,7 @@ export default Ember.Service.extend({
             res,
             ex,
             ex_attrs;
+            
         console.log("Next dial request: "+nextRequest);
         if (nextRequest) {
             intro = {
@@ -32,7 +33,6 @@ export default Ember.Service.extend({
             ];
             packed = vuvuzela.marshal(intro, intro_attrs);
             ctxt = onionbox.seal(packed, vuvuzela.forwardNonce(round),[nextRequest]);
-            console.log(ctxt.onion);
             ex = {
                 'Bucket': vuvuzela.keyDialBucket(nextRequest, buckets),
                 'EncryptedIntro': ctxt.onion,
@@ -50,9 +50,7 @@ export default Ember.Service.extend({
             {name:'EncryptedIntro', type:'uint8_t', len:vuvuzela.sizeEncryptedIntro}
         ];
         packed = vuvuzela.marshal(ex, ex_attrs);
-        console.log("ex: "+packed);
         res = onionbox.seal(packed, vuvuzela.forwardNonce(round), this.get('session').get('serverKeys'));
-        console.log("res.onion length: " + res.onion.length);
         return {
             'Round': round,
             'Onion': Array.prototype.slice.call(res.onion)

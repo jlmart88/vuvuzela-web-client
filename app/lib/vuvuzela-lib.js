@@ -2,12 +2,14 @@ import onionbox from './onionbox';
 
 export default {
     sizeIntro: 36,
-    sizeEncryptedIntro: 84, // 48 + 36
+    sizeEncryptedIntro: 84, // 48 (onionbox.overhead) + 36 (sizeIntro)
+    sizeMessage: 240,
+    sizeEncryptedMessage: 256, // 16 (box.overhead) + 240 (sizeMessage)
 
     forwardNonce: function(round) {
         var nonce = new Uint8Array(24),
             roundBuf = new Uint8Array(new Uint32Array([round]).buffer);
-        roundBuf.reverse();
+        roundBuf.reverse(); // fix endianness
         nonce.set(roundBuf);
         nonce[4] = 0;
         return nonce;

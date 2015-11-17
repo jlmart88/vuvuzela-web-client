@@ -29,7 +29,7 @@ export default Ember.Service.extend({
 
     myMessageHandler: function(event) {
         var data;
-        console.log('Message: ' + event.data);
+        console.log('Message: ' + JSON.parse(event.data).Type);
         data = JSON.parse(event.data);
         switch(data.Type) {
             case 4: // ConvoResponse
@@ -38,10 +38,10 @@ export default Ember.Service.extend({
                 this.get('dialingProtocol').handleDialBucket(data.Message);
                 break;
             case 7: // AnnounceConvoRound
-                this.get('conversationProtocol').nextConvoRequest(data.Message.Round);
+                this.get('ws').send({'Type':0, 'Message':this.get('conversationProtocol').nextConvoRequest(data.Message.Round)}, true);
                 break;
             case 8: // AnnounceDialRound
-                this.get('ws').send({"Type":1, "Message":this.get('dialingProtocol').nextDialRequest(data.Message.Round, data.Message.Buckets)}, true);
+                this.get('ws').send({'Type':1, 'Message':this.get('dialingProtocol').nextDialRequest(data.Message.Round, data.Message.Buckets)}, true);
                 break;
             default: // error
                 break;

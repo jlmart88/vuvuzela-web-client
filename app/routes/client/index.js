@@ -1,10 +1,5 @@
-export default Ember.Route.extend({
-    socket: Ember.inject.service(),
+import IndexRoute from '../index'
 
-    beforeModel: function() {
-        if (!this.get('socket').get('isConnected')) {
-            this.transitionTo('auth.login');
-        }
-    }
+export default IndexRoute.extend({
 
 });
