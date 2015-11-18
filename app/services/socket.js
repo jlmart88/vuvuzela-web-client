@@ -33,6 +33,7 @@ export default Ember.Service.extend({
         data = JSON.parse(event.data);
         switch(data.Type) {
             case 4: // ConvoResponse
+                this.get('conversationProtocol').handleConvoResponse(data.Message);
                 break;
             case 6: // DialBucket
                 this.get('dialingProtocol').handleDialBucket(data.Message);

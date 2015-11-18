@@ -16,7 +16,7 @@ export default {
     },
 
     backwardNonce: function(round) {
-        var nonce = nacl.forwardNonce(round);
+        var nonce = this.forwardNonce(round);
         nonce[4] = 1;
         return nonce; 
     },
