@@ -129,5 +129,144 @@ export default {
         }
 
         return obj;
+    },
+
+    varintEncode: function(num) {
+        var buf = new Uint8Array(10),
+            numCpy = Math.abs(Math.floor(num)),
+            var64 = new Uint8Array(8),
+            index = 0,
+            tmp1,
+            tmp2;
+
+        //console.log('numCpy: '+numCpy);
+
+        // copy into uint64 array
+        for (var i = 0; i < 8; i++){
+            if (num < 1) {
+                var64[i] = ~(numCpy & 255);
+                if (i == 0) {
+                    var64[i] = var64[i] + 1;
+                }
+            } else {
+                var64[i] = numCpy & 255;
+            }
+            numCpy = numCpy/256;
+        }
+
+        //console.log('var64: '+JSON.stringify(var64));
+
+        // shift left 1
+        tmp1 = 0;
+        for (var i = 0; i < 8; i++){
+            tmp2 = (var64[i] >> 7) & 1;
+            var64[i] = (var64[i] << 1) + tmp1;
+            tmp1 = tmp2; 
+        }
+
+        //console.log('var64 shifted left 1: '+JSON.stringify(var64));
+
+        // invert if negative
+        if (num < 1) {
+            for (var i = 0; i < 8; i++){
+                var64[i] = ~var64[i];
+            }
+        }
+
+        // encode
+        tmp1 = 0;
+        for (var i = 0; i < 8; i++){
+            tmp2 = ((var64[i] << i) & 127) + tmp1;
+            tmp1 = (var64[i] >>> 7-i) & 255;
+
+            if (i < 7) {
+                if (var64[i+1] != 0 || tmp1 != 0) {
+                    tmp2 = tmp2 | 128;
+                }
+            }
+            buf.set(new Uint8Array([tmp2]), i);
+        }
+
+        return buf;
+    },
+
+    varintDecode: function(arr) {
+        var num = 0,
+            arrStr = "",
+            numStr = "",
+            var64 = new Uint8Array(8),
+            tmp1,
+            tmp2;
+
+        for (var i = 0; i < arr.length; i++) {
+            arrStr = (arr[i] & 127).toString(2);
+            while (arrStr.length < 7) {
+                arrStr = "0" + arrStr
+            }
+            if (arr[i] < 128) {
+                if (i > 9 || i == 9 && arr[i] > 1) {
+                    throw "Varint Decode Overflow error"
+                }
+                numStr =  arrStr + numStr;
+                break;
+            }
+            numStr = arrStr + numStr;
+        }
+
+        while (numStr.length % 8 != 0){
+            numStr = "0" + numStr;
+        } 
+
+        //console.log('numStr: '+numStr);
+
+        // copy into uint64 array
+        for (var i = 0; i < 8; i++){
+            if (numStr > 0) {
+                var64[i] = parseInt(numStr.slice(numStr.length - 8, numStr.length), 2);
+                numStr = numStr.slice(0, numStr.length-8);
+            } else {
+                var64[i] = 0;
+            }
+        }
+
+        //console.log('var64: '+JSON.stringify(var64));
+
+        // shift right 1
+        tmp1 = 0;
+        for (var i = 7; i >= 0; i--){
+            tmp2 = (var64[i] & 1) << 7;
+            var64[i] = (var64[i] >>> 1) + tmp1;
+            tmp1 = tmp2; 
+        }
+
+        //console.log('var64 shift right: '+JSON.stringify(var64));
+
+        // invert if negative
+        if (tmp1 > 0) {
+            for (var i = 0; i < 8; i++){
+                var64[i] = ~var64[i];
+            }
+            //console.log('var64 inverted: '+JSON.stringify(var64));
+            // twos complement to return value
+            for (var i = 0; i < 8; i++){
+                var64[i] = ~var64[i];
+                if (i == 0) {
+                    var64[0] = var64[0] + 1
+                }
+            }
+        }
+
+
+
+        num = 0;
+        // copy out of uint64 array
+        for (var i = 0; i < 8; i++){
+            num = num | var64[i] << (i * 8);
+        }
+        if (tmp1 > 0) {
+            return -num;
+        } else {
+            return num;
+        }
     }
 }

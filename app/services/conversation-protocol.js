@@ -25,6 +25,7 @@ export default Ember.Service.extend({
         var nextMessage = this.get('userMessageQueue').shiftObject(),
             packed,
             body = new Uint8Array(vuvuzela.sizeMessage),
+            timeBuf,
             encMsg,
             nonce,
             roundBuf,
@@ -37,8 +38,11 @@ export default Ember.Service.extend({
             body.set(nacl.encode_latin1(nextMessage), 1);
         } else {
             body[0] = 0;
-            body.set(new Uint8Array((new Float64Array([parseInt(moment().format('X'))]).buffer)), 1);
+            timeBuf = vuvuzela.varintEncode(Math.floor(parseInt(moment().format('X'))));
+            console.log('timeBuf: '+timeBuf);
+            body.set(timeBuf, 1);
         }
+        console.log('body: '+body);
         nonce = new Uint8Array(24);
         roundBuf = new Uint8Array(new Uint32Array([round]).buffer);
         roundBuf.reverse(); // fix endianness

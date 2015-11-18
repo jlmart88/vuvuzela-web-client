@@ -21,7 +21,7 @@ module.exports = function(environment) {
     wsAddress: 'ws://localhost:8080',
     contentSecurityPolicy: {
       'default-src': "'none'",
-      'script-src': "'self' 'unsafe-eval'",
+      'script-src': "'self' 'unsafe-eval' 'unsafe-inline'",
       'font-src': "'self'",
       'connect-src': "'self' *",
       'img-src': "'self'",
