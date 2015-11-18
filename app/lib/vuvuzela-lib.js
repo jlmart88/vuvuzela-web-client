@@ -77,7 +77,7 @@ export default {
                     buf.set(tmp2, tmp1.length);
                     break;
                 default:
-                    console.log('Unknown type');
+                    console.err('Unknown type');
                     break;
             }
         }
@@ -124,6 +124,9 @@ export default {
                         obj[attr.name] = tmp1[0];
                         index += 1;
                     }
+                    break;
+                default:
+                    console.err('Unknown type');
                     break;
             }
         }

@@ -1,6 +1,6 @@
 import config from '../config/environment';
 
-export default Ember.Service.extend({
+export default Ember.Service.extend(Ember.Evented, {
     websockets: Ember.inject.service(),
     session: Ember.inject.service(),
 
@@ -13,18 +13,24 @@ export default Ember.Service.extend({
     connectToWS: function() {
         var ws;
 
-        this.set('ws', this.get('websockets').socketFor(config.wsAddress + '/ws?publickey=' + this.get('session').get('myPublicKey')));
-
-        ws = this.get('ws');
+        if (this.get('ws')){
+            this.get('ws').reconnect()
+        } else {
+            this.set('ws', this.get('websockets').socketFor(config.wsAddress + '/ws?publickey=' + this.get('session').get('myPublicKey')));
+        
+            ws = this.get('ws');
      
-        ws.on('open', this.myOpenHandler, this);
-        ws.on('message', this.myMessageHandler, this);
-        ws.on('close', this.myCloseHandler, this);
+            ws.on('open', this.myOpenHandler, this);
+            ws.on('message', this.myMessageHandler, this);
+            ws.on('close', this.myCloseHandler, this);
+            ws.on('error', this.myErrorHandler, this);
+        }
     },
      
     myOpenHandler: function(event) {
-        console.log('On open event has been called: ' + event);
+        console.log('Connected to server');
         this.set('isConnected', true);
+        this.trigger('connected');
     },
 
     myMessageHandler: function(event) {
@@ -50,8 +56,14 @@ export default Ember.Service.extend({
     },
 
     myCloseHandler: function(event) {
-        console.log('On close event has been called: ' + event);
+        console.log('Disconnected from server');
         this.set('isConnected', false);
+        this.trigger('closed');
+    },
+
+    myErrorHandler: function(event) {
+        console.log('Websocket error');
+        this.trigger('error');
     },
 
 

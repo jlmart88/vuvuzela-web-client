@@ -5,16 +5,25 @@ export default Ember.Controller.extend({
     publicKey: null,
     privateKey: null,
     name: null,
+    stateClass: function(stateClass) {
+        return stateClass
+    },
 
-    listenForConnection: function() {
-        console.log(this.socket);
-        if (this.get('socket').get('isConnected')) {
-            this.transitionToRoute('client');
-        }
-    }.observes('socket.isConnected'),
+    init: function() {
+        var _this = this;
+        this._super.apply(this, arguments);
+        this.get('socket').on('connected', function() {
+            _this.set('stateClass', '');
+            _this.transitionToRoute('client');
+        });
+        this.get('socket').on('error', function() {
+            _this.set('stateClass', 'error');
+        });
+    },
 
     actions: {
         login: function() {
+            this.set('stateClass', 'loading');
             // this.get('session').set('myPublicKey', this.get('publicKey'));
             // this.get('session').set('myPrivateKey', this.get('privateKey'));
             // this.get('session').set('name', this.get('name'));

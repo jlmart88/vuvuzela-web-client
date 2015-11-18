@@ -2,7 +2,7 @@ import onionbox from '../lib/onionbox';
 import nacl from '../lib/nacl';
 import vuvuzela from '../lib/vuvuzela-lib';
 
-export default Ember.Service.extend({
+export default Ember.Service.extend(Ember.Evented, {
     session: Ember.inject.service(),
 
     userDialRequests: [],
@@ -79,7 +79,8 @@ export default Ember.Service.extend({
                 continue;
             }   
 
-            console.log("dial from " + intro.LongTermKey);
+            console.log('dial from ' + intro.LongTermKey);
+            this.trigger('newDial', intro.Rendezvous, intro.LongTermKey);
         }
     }
 });
