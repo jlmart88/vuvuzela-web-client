@@ -24,8 +24,8 @@ module.exports = function(defaults) {
   app.import('bower_components/base32/lib/base32.js');
   app.import('bower_components/moment/moment.js');
   app.import('bower_components/jsSHA/src/sha.js');
-  app.import('bower_components/semantic/dist/semantic.min.js')
-  app.import('bower_components/semantic/dist/semantic.min.css');
+  // app.import('bower_components/semantic/dist/semantic.min.js')
+  // app.import('bower_components/semantic/dist/semantic.min.css');
 
 
   return app.toTree();

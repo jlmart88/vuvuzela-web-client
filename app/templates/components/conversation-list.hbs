@@ -1,0 +1,18 @@
+<div class="ui action input">
+    {{input value=dialee placeholder="Dialee Name" insert-newline="dial"}}
+    <button class="ui button" {{action "dial"}}>Dial</button>
+</div>
+
+<h4 class="ui inverted header">Conversations</h4>
+<div class="ui divider"></div>
+
+{{#if conversations}}
+<div class="ui segments">
+    {{#each conversation in conversations}}    
+        {{conversation-list-item
+            name=conversation
+            activeConversation=activeConversation
+            action="switchConversation"}}
+    {{/each}}
+</div>
+{{/if}}

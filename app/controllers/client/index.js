@@ -1,13 +1,23 @@
 import nacl from '../../lib/nacl';
 
 export default Ember.Controller.extend({
-    dialee: null,
-    theirKey: null,
     message: null,
 
     dialingProtocol: Ember.inject.service(),
     conversationProtocol: Ember.inject.service(),
     pki: Ember.inject.service(),
+    session: Ember.inject.service(),
+
+    isInConversation: Ember.computed('activeConversation', function() {
+        if (this.get('activeConversation')){
+            return this.get('activeConversation') !== this.get('session').get('myName');
+        }
+        return false
+    }),
+
+    activeConversation: Ember.computed('conversationProtocol.theirPublicKey', function() {
+        return this.get('pki').getName(this.get('conversationProtocol').get('theirPublicKey'));
+    }),
 
     init: function() {
         var _this = this;
@@ -17,18 +27,6 @@ export default Ember.Controller.extend({
     },
 
     handleNewDial: function(rendezvous, key) {
-        alert('dial from: ' +this.get('pki').getName(key));
+        alert('dial from: ' +this.get('pki').getNameFromBytes(key));
     },
-
-    actions: {
-        dial: function() {
-            this.get('dialingProtocol').queueRequest(this.get('pki').getKeyBytes(this.get('dialee')));
-        },
-        send: function() {
-            this.get('conversationProtocol').queueMessage(this.get('message'));
-        },
-        set: function() {
-            this.get('conversationProtocol').set('theirPublicKey', this.get('theirKey'));
-        }
-    }
 });

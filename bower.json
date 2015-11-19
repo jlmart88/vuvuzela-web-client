@@ -17,6 +17,6 @@
     "base32": "git://github.com/agnoster/base32-js",
     "moment": "~2.10.6",
     "jsSHA": "~2.0.2",
-    "semantic": "semantic-ui#~2.1.6"
+    "semantic-ui": "~2.1.6"
   }
 }

@@ -1,9 +1,14 @@
-<!--{{conversation-list}}-->
-{{input value=dialee placeholder="Dialee Name"}}
-<button {{action 'dial'}}>Dial</button>
-<br>
-{{input value=theirKey placeholder="Their Key"}}
-<button {{action 'set'}}>Set</button>
-<br>
-{{input value=message placeholder="Message"}}
-<button {{action 'send'}}>Send</button>
+<div class="ui padded grid" style="height:100vh">
+    <div class="six wide grey center aligned column">
+        {{conversation-list
+            activeConversation=activeConversation}}
+    </div>
+    <div class="ten wide column">
+        {{#if isInConversation}}
+            {{conversation-body
+                name=activeConversation}}
+        {{else}}
+            No conversation selected
+        {{/if}}
+    </div>
+</div>

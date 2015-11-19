@@ -7,10 +7,8 @@ export default Ember.Service.extend({
         'nickolai': 'y92gkzpq132d9jqv8xcrgemmhf57ev48e32cegmsa3vmaak5a0j0',
     },
 
-    getName: function(keyBytes) {
-        var key = nacl.bytesToBase32str(keyBytes),
-            people = this.get('people');
-
+    getName: function(key) {
+        var people = this.get('people');
         for (var prop in people) {
             if (people.hasOwnProperty(prop)) {
                 if (people[prop] === key) {
@@ -19,6 +17,11 @@ export default Ember.Service.extend({
             }
         }
         return null;
+
+    },
+
+    getNameFromBytes: function(keyBytes) {
+        return this.getName(nacl.bytesToBase32str(keyBytes));
     },
 
     getKey: function(name) {

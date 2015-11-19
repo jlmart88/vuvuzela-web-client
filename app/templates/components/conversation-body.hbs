@@ -1,0 +1,35 @@
+<div class="ui one column grid" style="height:100vh">
+    <div class="row">
+        <div class="column">
+            <h2 class="ui header">
+                {{name}}
+            </h2>
+            <div class="ui divider"></div>
+            <div {{bind-attr id=messageListId}} class="ui list" style="overflow-y:scroll;height:calc(100vh - 151px)">
+                {{#each message in sortedMessages}}
+                    <div class="item">
+                        <div {{bind-attr id=message.id}} {{bind-attr class=":ui :segment message.isMine:right:left :floated"}}>
+                            {{message.text}}
+                        </div>
+                    </div>
+                {{/each}}
+                {{#each message in queuedMessages}}
+                    <div class="item">
+                        <div class="ui right floated disabled segment">
+                            {{message}}
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+
+        </div>
+    </div>
+    <div class="bottom aligned row">
+        <div class="column">
+            <div class="ui action fluid input"> 
+                {{input value=typedMessage placeholder="Message" insert-newline="sendMessage"}}
+                <button {{bind-attr class=":ui typedMessage::disabled :button"}} {{action "sendMessage"}}>Send</button>
+            </div>
+        </div>
+    </div>
+</div>

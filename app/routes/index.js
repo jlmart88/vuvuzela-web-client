@@ -8,7 +8,7 @@ export default Ember.Route.extend({
         this.get('socket').on('closed', function() {
             _this.transitionTo('auth.login');
         });
-    }
+    },
 
     beforeModel: function() {
         if (!this.get('socket').get('isConnected')) {

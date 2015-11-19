@@ -2,7 +2,7 @@ import onionbox from '../lib/onionbox';
 import nacl from '../lib/nacl';
 import vuvuzela from '../lib/vuvuzela-lib';
 
-export default Ember.Service.extend({
+export default Ember.Service.extend(Ember.Evented, {
     session: Ember.inject.service(),
 
     theirPublicKey: null,
@@ -64,6 +64,11 @@ export default Ember.Service.extend({
         res = onionbox.seal(packed, vuvuzela.forwardNonce(round), this.get('session').get('serverKeys'));
         //console.log('convomessage onion len:'+res.onion.length);
         this.get('pendingRounds')[round] = {onionSharedKeys: res.sharedKeys, sentMessage: encMsg};
+
+        if (nextMessage) {
+            this.trigger('sentMessage', nextMessage, round)
+        };
+
         return {
             'Round': round,
             'Onion': Array.prototype.slice.call(res.onion)
@@ -115,6 +120,7 @@ export default Ember.Service.extend({
         if (msgData[0] == 1) {
             body = nacl.decode_latin1(msgData.slice(1));
             console.log('Received message: ' + body);
+            this.trigger('receivedMessage', body, response.Round);
         } else {
             body = moment.unix(vuvuzela.varintDecode(msgData.slice(1)));
             this.set('latency', moment().diff(body));
