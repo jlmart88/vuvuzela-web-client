@@ -1,0 +1,10 @@
+#message-list {
+    overflow-y:scroll;
+    height:calc(100vh - 160px);
+}
+
+#message-list .ui.segment {
+    padding: .5em 1em;
+    max-width: 80%;
+    word-break: break-all;
+}

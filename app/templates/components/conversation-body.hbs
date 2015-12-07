@@ -7,7 +7,7 @@
                 <i {{bind-attr class="isResponding:green:red :comment isResponding::outline :icon"}}></i>
             </h2>
             <div class="ui divider"></div>
-            <div {{bind-attr id=messageListId}} class="ui list" style="overflow-y:scroll;height:calc(100vh - 151px)">
+            <div {{bind-attr id=messageListId}} class="ui list">
                 {{#each message in sortedMessages}}
                     <div class="item">
                         <div {{bind-attr id=message.id}} {{bind-attr class=":ui :segment message.isMine:right:left :floated"}}>
