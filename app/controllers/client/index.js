@@ -18,15 +18,4 @@ export default Ember.Controller.extend({
     activeConversation: Ember.computed('conversationProtocol.theirPublicKey', function() {
         return this.get('pki').getName(this.get('conversationProtocol').get('theirPublicKey'));
     }),
-
-    init: function() {
-        var _this = this;
-        this._super.apply(this, arguments);
-
-        this.get('dialingProtocol').on('newDial', this.handleNewDial.bind(_this));
-    },
-
-    handleNewDial: function(rendezvous, key) {
-        alert('dial from: ' +this.get('pki').getNameFromBytes(key));
-    },
 });

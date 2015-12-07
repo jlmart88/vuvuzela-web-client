@@ -1,18 +1,61 @@
-<div class="ui action input">
-    {{input value=dialee placeholder="Dialee Name" insert-newline="dial"}}
-    <button class="ui button" {{action "dial"}}>Dial</button>
+<div class="ui one column grid" style="height:100vh">
+    <div class="row">
+        <div class="column">
+            <div class="ui form">
+                <div class="field">
+                    <div class="ui action input">
+                        {{input value=dialee placeholder="Dialee Name" insert-newline="dial"}}
+                        <button {{bind-attr class=":ui dialee::disabled :button"}} {{action "dial"}}>Dial</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="overflow-y:scroll;height:calc(100vh - 151px)">
+        <div class="column">
+            <h4 class="ui inverted header">New Dials</h4>
+            <div class="ui divider"></div>
+
+            {{#if newDials}}
+                <div class="ui segments">
+                    {{#each newDial in newDials}}    
+                        {{conversation-list-dial-item
+                            name=newDial
+                            acceptDial="acceptDial"
+                            ignoreDial="ignoreDial"}}
+                    {{/each}}
+                </div>
+            {{/if}}
+
+            <h4 class="ui inverted header">Conversations</h4>
+            <div class="ui divider"></div>
+
+            {{#if conversations}}
+                <div class="ui segments">
+                    {{#each conversation in conversations}}    
+                        {{conversation-list-item
+                            name=conversation
+                            activeConversation=activeConversation
+                            action="switchConversation"
+                            removeConversation="removeConversation"}}
+                    {{/each}}
+                </div>
+            {{/if}}
+        </div>
+    </div>
+
+    <div class="bottom aligned row">
+        <div class="column">
+            <div class="ui large label">
+                Latency:
+                <div class="detail">
+                    {{#if latency}} {{latency}} {{else}} --- {{/if}} ms
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<h4 class="ui inverted header">Conversations</h4>
-<div class="ui divider"></div>
 
-{{#if conversations}}
-<div class="ui segments">
-    {{#each conversation in conversations}}    
-        {{conversation-list-item
-            name=conversation
-            activeConversation=activeConversation
-            action="switchConversation"}}
-    {{/each}}
-</div>
-{{/if}}
+

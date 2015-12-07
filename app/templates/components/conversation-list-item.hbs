@@ -1,3 +1,12 @@
 <div {{bind-attr class=":ui :left :aligned :segment isActive:olive:grey :inverted"}}>
-    {{name}}
+    <div class="ui middle aligned grid">
+        <div class="ui left aligned eight wide column">
+            {{name}}
+        </div>
+        <div class="ui right aligned eight wide column">
+                <button {{bind-attr class=":ui :inverted :red :tiny :icon :compact :button isHovered::basic"}} {{action "removeConversation"}}>
+                    <i class="remove icon"></i>  
+                </button>
+        </div>
+    </div>
 </div>

@@ -4,6 +4,7 @@ export default {
     sizeIntro: 36,
     sizeEncryptedIntro: 84, // 48 (onionbox.overhead) + 36 (sizeIntro)
     sizeMessage: 240,
+    sizeMessageBody: 293, // 240 (sizeMessage) - 1 (flag for message/timestamp)
     sizeEncryptedMessage: 256, // 16 (box.overhead) + 240 (sizeMessage)
 
     forwardNonce: function(round) {

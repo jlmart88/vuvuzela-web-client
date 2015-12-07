@@ -7,10 +7,16 @@ export default Ember.Service.extend(Ember.Evented, {
 
     theirPublicKey: null,
     latency: 0,
+    peerResponding: false,
+
+    resetPeerResponding: function() {
+        this.set('peerResponding', false);
+    }.observes('theirPublicKey'),
 
     getTheirPublicKeyBytes: function() {
         if (this.get('theirPublicKey') == null) {
-            this.set('theirPublicKey', this.get('session').get('myPublicKey'));
+            //this.set('theirPublicKey', this.get('session').get('myPublicKey'));
+            return this.get('session').getPublicKeyBytes();
         }
         return nacl.base32strToBytes(this.get('theirPublicKey'));
     },
@@ -20,6 +26,16 @@ export default Ember.Service.extend(Ember.Evented, {
 
     queueMessage: function(message) {
         this.get('userMessageQueue').pushObject(message);
+    },
+
+    setMessageQueue: function(messages) {
+        this.get('userMessageQueue').clear();
+        this.get('userMessageQueue').pushObjects(messages);
+    },
+
+    changeConversation: function(key, name) {
+        this.set('theirPublicKey', key);
+        this.trigger('changeConversation', name);
     },
 
     nextConvoRequest: function(round) {
@@ -49,7 +65,7 @@ export default Ember.Service.extend(Ember.Evented, {
         roundBuf.reverse(); // fix endianness
         nonce.set(roundBuf);
         nonce[23] = this.myRole();
-        console.log('nonce: '+nonce);
+        //console.log('nonce: '+nonce);
         encMsg = nacl.crypto_box(body, nonce, this.getTheirPublicKeyBytes(), this.get('session').getPrivateKeyBytes());
         cex = {
             'DeadDrop': this.deadDrop(round),
@@ -89,7 +105,7 @@ export default Ember.Service.extend(Ember.Evented, {
             return;
         }
 
-        console.log(pr);
+        //console.log(pr);
         encMsg = onionbox.open(nacl.encode_latin1(window.atob(response.Onion)), vuvuzela.backwardNonce(response.Round), pr.onionSharedKeys);
 
         if (!encMsg.ok) {
@@ -106,6 +122,7 @@ export default Ember.Service.extend(Ember.Evented, {
         }
 
         if (isSameMsg && !this.solo()) {
+            this.set('peerResponding', false);
             return;
         }
 
@@ -114,7 +131,7 @@ export default Ember.Service.extend(Ember.Evented, {
         roundBuf.reverse(); // fix endianness
         nonce.set(roundBuf);
         nonce[23] = this.theirRole();
-        console.log('nonce: '+nonce);
+        //console.log('nonce: '+nonce);
         msgData = nacl.crypto_box_open(encMsg.message, nonce, this.getTheirPublicKeyBytes(), this.get('session').getPrivateKeyBytes());
 
         if (msgData[0] == 1) {
@@ -126,6 +143,8 @@ export default Ember.Service.extend(Ember.Evented, {
             this.set('latency', moment().diff(body));
             console.log('latency (ms): ' + this.get('latency'));
         }
+
+        this.set('peerResponding', true);
     },
 
     solo: function() {

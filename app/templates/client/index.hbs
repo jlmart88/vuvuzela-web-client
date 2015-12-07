@@ -4,11 +4,7 @@
             activeConversation=activeConversation}}
     </div>
     <div class="ten wide column">
-        {{#if isInConversation}}
-            {{conversation-body
-                name=activeConversation}}
-        {{else}}
-            No conversation selected
-        {{/if}}
+        {{conversation-body
+            name=activeConversation}}
     </div>
 </div>
