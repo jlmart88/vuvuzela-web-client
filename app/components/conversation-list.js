@@ -32,7 +32,7 @@ export default Ember.Component.extend({
     actions: {
         dial: function() {
             var name = this.get('dialee');
-            if (name) {
+            if (name && name !== this.get('session.myName')) {
                 this.get('dialingProtocol').queueRequest(this.get('pki').getKeyBytes(name));
                 this.createConversation(name);
                 this.send('switchConversation', name);
