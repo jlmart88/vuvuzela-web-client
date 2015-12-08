@@ -8,6 +8,8 @@ export default Ember.Service.extend(Ember.Evented, {
     theirPublicKey: null,
     latency: 0,
     peerResponding: false,
+    userMessageQueue: [],
+    pendingRounds: {},
 
     resetPeerResponding: function() {
         this.set('peerResponding', false);
@@ -15,14 +17,10 @@ export default Ember.Service.extend(Ember.Evented, {
 
     getTheirPublicKeyBytes: function() {
         if (this.get('theirPublicKey') == null) {
-            //this.set('theirPublicKey', this.get('session').get('myPublicKey'));
             return this.get('session').getPublicKeyBytes();
         }
         return nacl.base32strToBytes(this.get('theirPublicKey'));
     },
-
-    userMessageQueue: [],
-    pendingRounds: {},
 
     queueMessage: function(message) {
         this.get('userMessageQueue').pushObject(message);
@@ -49,23 +47,19 @@ export default Ember.Service.extend(Ember.Evented, {
             res,
             cex,
             cex_attrs;
-        //console.log('Next message: ' + nextMessage);
         if (nextMessage) {
             body[0] = 1;
             body.set(nacl.encode_latin1(nextMessage), 1);
         } else {
             body[0] = 0;
             timeBuf = vuvuzela.varintEncode(Math.floor(parseInt(moment().format('X'))));
-            //console.log('timeBuf: '+timeBuf);
             body.set(timeBuf, 1);
         }
-        //console.log('body: '+body);
         nonce = new Uint8Array(24);
         roundBuf = new Uint8Array(new Uint32Array([round]).buffer);
         roundBuf.reverse(); // fix endianness
         nonce.set(roundBuf);
         nonce[23] = this.myRole();
-        //console.log('nonce: '+nonce);
         encMsg = nacl.crypto_box(body, nonce, this.getTheirPublicKeyBytes(), this.get('session').getPrivateKeyBytes());
         cex = {
             'DeadDrop': this.deadDrop(round),
@@ -78,7 +72,6 @@ export default Ember.Service.extend(Ember.Evented, {
 
         packed = vuvuzela.marshal(cex, cex_attrs);
         res = onionbox.seal(packed, vuvuzela.forwardNonce(round), this.get('session').get('serverKeys'));
-        //console.log('convomessage onion len:'+res.onion.length);
         this.get('pendingRounds')[round] = {onionSharedKeys: res.sharedKeys, sentMessage: encMsg};
 
         if (nextMessage) {
@@ -105,7 +98,6 @@ export default Ember.Service.extend(Ember.Evented, {
             return;
         }
 
-        //console.log(pr);
         encMsg = onionbox.open(nacl.encode_latin1(window.atob(response.Onion)), vuvuzela.backwardNonce(response.Round), pr.onionSharedKeys);
 
         if (!encMsg.ok) {
@@ -131,7 +123,6 @@ export default Ember.Service.extend(Ember.Evented, {
         roundBuf.reverse(); // fix endianness
         nonce.set(roundBuf);
         nonce[23] = this.theirRole();
-        //console.log('nonce: '+nonce);
         msgData = nacl.crypto_box_open(encMsg.message, nonce, this.getTheirPublicKeyBytes(), this.get('session').getPrivateKeyBytes());
 
         if (msgData[0] == 1) {

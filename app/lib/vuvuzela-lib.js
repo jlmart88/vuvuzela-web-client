@@ -143,8 +143,6 @@ export default {
             tmp1,
             tmp2;
 
-        //console.log('numCpy: '+numCpy);
-
         // copy into uint64 array
         for (var i = 0; i < 8; i++){
             if (num < 1) {
@@ -158,8 +156,6 @@ export default {
             numCpy = numCpy/256;
         }
 
-        //console.log('var64: '+JSON.stringify(var64));
-
         // shift left 1
         tmp1 = 0;
         for (var i = 0; i < 8; i++){
@@ -167,8 +163,6 @@ export default {
             var64[i] = (var64[i] << 1) + tmp1;
             tmp1 = tmp2; 
         }
-
-        //console.log('var64 shifted left 1: '+JSON.stringify(var64));
 
         // invert if negative
         if (num < 1) {
@@ -221,8 +215,6 @@ export default {
             numStr = "0" + numStr;
         } 
 
-        //console.log('numStr: '+numStr);
-
         // copy into uint64 array
         for (var i = 0; i < 8; i++){
             if (numStr > 0) {
@@ -233,8 +225,6 @@ export default {
             }
         }
 
-        //console.log('var64: '+JSON.stringify(var64));
-
         // shift right 1
         tmp1 = 0;
         for (var i = 7; i >= 0; i--){
@@ -243,14 +233,11 @@ export default {
             tmp1 = tmp2; 
         }
 
-        //console.log('var64 shift right: '+JSON.stringify(var64));
-
         // invert if negative
         if (tmp1 > 0) {
             for (var i = 0; i < 8; i++){
                 var64[i] = ~var64[i];
             }
-            //console.log('var64 inverted: '+JSON.stringify(var64));
             // twos complement to return value
             for (var i = 0; i < 8; i++){
                 var64[i] = ~var64[i];
@@ -259,8 +246,6 @@ export default {
                 }
             }
         }
-
-
 
         num = 0;
         // copy out of uint64 array
