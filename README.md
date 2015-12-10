@@ -1,7 +1,8 @@
 # Vuvuzela-web
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+This is a browser implementation of the client for [Vuvuzela](https://github.com/lazard/vuvuzela), a private messaging system.
+
+![client](https://github.com/jlmart88/vuvuzela-web-client/blob/master/screenshots/client.png)
 
 ## Prerequisites
 
@@ -39,9 +40,13 @@ Make use of the many generators for code, try `ember help generate` for more det
 * `ember build` (development)
 * `ember build --environment production` (production)
 
-### Deploying
+### Configuration
 
-Specify what it takes to deploy your app.
+Until a PKI has been integrated into Vuvuzela (See issue tracked [here](https://github.com/davidlazar/vuvuzela/issues/1)), the PKI is hard coded, as with the CLI client implementation. For working with the hard coded implementation:
+
+* List all usernames/public keys in `app/services/pki.js`
+* List all server keys in `app/services/session.js`
+* Replace `wsAddress` in `config/environment.js` with the address of the Vuvuzela Entry Server
 
 ## Further Reading / Useful Links
 
