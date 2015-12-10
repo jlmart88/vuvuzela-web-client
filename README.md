@@ -1,6 +1,6 @@
 # Vuvuzela-web
 
-This is a browser implementation of the client for [Vuvuzela](https://github.com/lazard/vuvuzela), a private messaging system.
+This is a browser implementation of the client for [Vuvuzela](https://github.com/davidlazar/vuvuzela), a private messaging system.
 
 ![client](https://github.com/jlmart88/vuvuzela-web-client/blob/master/screenshots/client.png)
 
