@@ -1,4 +1,5 @@
-import vuvuzela from '../lib/vuvuzela-lib'
+import vuvuzela from '../lib/vuvuzela-lib';
+import Ember from 'ember';
 
 export default Ember.Component.extend({
     name: null,
@@ -49,8 +50,7 @@ export default Ember.Component.extend({
     },
 
     changeConversation: function(name) {
-        var storedConversations = this.get('storedConversations'),
-            currentConversationName = this.get('name');
+        var storedConversations = this.get('storedConversations');
         if (!storedConversations[name]) {
             storedConversations[name] = {
                 'messages': [],

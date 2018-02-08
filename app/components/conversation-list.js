@@ -1,3 +1,5 @@
+import Ember from 'ember';
+
 export default Ember.Component.extend({
     conversations:[],
     activeConversation: null,
@@ -18,7 +20,7 @@ export default Ember.Component.extend({
 
     handleNewDial: function(rendezvous, key) {
         var name = this.get('pki').getNameFromBytes(key);
-        if (this.get('conversations').indexOf(name) != -1) {
+        if (this.get('conversations').indexOf(name) !== -1) {
             //notify the user that some active conversation is redialing?
         } else {
             this.get('newDials').addObject(name);

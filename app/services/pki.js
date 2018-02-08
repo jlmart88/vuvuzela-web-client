@@ -1,4 +1,5 @@
 import nacl from '../lib/nacl';
+import Ember from 'ember';
 
 export default Ember.Service.extend({
     people: {

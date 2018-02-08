@@ -1,3 +1,5 @@
+import Ember from 'ember';
+
 export default Ember.Controller.extend({
     socket: Ember.inject.service(),
     session: Ember.inject.service(),
@@ -6,7 +8,7 @@ export default Ember.Controller.extend({
     privateKey: null,
     name: null,
     stateClass: function(stateClass) {
-        return stateClass
+        return stateClass;
     },
 
     init: function() {

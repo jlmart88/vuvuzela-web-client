@@ -1,4 +1,4 @@
-import nacl from '../../lib/nacl';
+import Ember from 'ember';
 
 export default Ember.Controller.extend({
     message: null,
@@ -12,7 +12,7 @@ export default Ember.Controller.extend({
         if (this.get('activeConversation')){
             return this.get('activeConversation') !== this.get('session').get('myName');
         }
-        return false
+        return false;
     }),
 
     activeConversation: Ember.computed('conversationProtocol.theirPublicKey', function() {

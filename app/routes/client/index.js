@@ -1,4 +1,4 @@
-import IndexRoute from '../index'
+import IndexRoute from '../index';
 
 export default IndexRoute.extend({
 

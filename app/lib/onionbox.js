@@ -20,7 +20,7 @@ export default {
         return {
             'onion': onion,
             'sharedKeys': sharedKeys
-        }
+        };
     },
 
     open: function(onion, nonce, sharedKeys) {
@@ -33,13 +33,13 @@ export default {
                 return {
                     'message': null,
                     'ok': false
-                }
+                };
             }
         }
 
         return {
             'message': message,
             'ok': true
-        }
+        };
     }
-}
+};

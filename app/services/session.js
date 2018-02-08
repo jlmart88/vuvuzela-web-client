@@ -1,4 +1,5 @@
 import nacl from '../lib/nacl';
+import Ember from 'ember';
 
 export default Ember.Service.extend({
     myPublicKey: null,
@@ -10,11 +11,11 @@ export default Ember.Service.extend({
         nacl.base32strToBytes('fkaf8ds0a4fmdsztqzpcn4em9npyv722bxv2683n9fdydzdjwgy0')
     ],
 
-    getPublicKeyBytes: function(publicKey) {
+    getPublicKeyBytes: function() {
         return nacl.base32strToBytes(this.get('myPublicKey'));
     },
 
-    getPrivateKeyBytes: function(privateKey) {
+    getPrivateKeyBytes: function() {
         return nacl.base32strToBytes(this.get('myPrivateKey'));
     }
 });

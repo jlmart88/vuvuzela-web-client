@@ -1,6 +1,7 @@
 import onionbox from '../lib/onionbox';
 import nacl from '../lib/nacl';
 import vuvuzela from '../lib/vuvuzela-lib';
+import Ember from 'ember';
 
 export default Ember.Service.extend(Ember.Evented, {
     session: Ember.inject.service(),
@@ -54,7 +55,7 @@ export default Ember.Service.extend(Ember.Evented, {
         return {
             'Round': round,
             'Onion': Array.prototype.slice.call(res.onion)
-        }
+        };
     },
 
     handleDialBucket: function(dialBucket) {

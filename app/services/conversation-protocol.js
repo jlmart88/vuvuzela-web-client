@@ -1,6 +1,9 @@
+/* globals moment */
+/* globals jsSHA */
 import onionbox from '../lib/onionbox';
 import nacl from '../lib/nacl';
 import vuvuzela from '../lib/vuvuzela-lib';
+import Ember from 'ember';
 
 export default Ember.Service.extend(Ember.Evented, {
     session: Ember.inject.service(),
@@ -64,24 +67,24 @@ export default Ember.Service.extend(Ember.Evented, {
         cex = {
             'DeadDrop': this.deadDrop(round),
             'EncryptedMessage': encMsg
-        }
+        };
         cex_attrs = [
             {name:'DeadDrop', type:'uint8_t', len:16},
             {name:'EncryptedMessage', type:'uint8_t', len:vuvuzela.sizeEncryptedMessage}
-        ]
+        ];
 
         packed = vuvuzela.marshal(cex, cex_attrs);
         res = onionbox.seal(packed, vuvuzela.forwardNonce(round), this.get('session').get('serverKeys'));
         this.get('pendingRounds')[round] = {onionSharedKeys: res.sharedKeys, sentMessage: encMsg};
 
         if (nextMessage) {
-            this.trigger('sentMessage', nextMessage, round)
-        };
+            this.trigger('sentMessage', nextMessage, round);
+        }
 
         return {
             'Round': round,
             'Onion': Array.prototype.slice.call(res.onion)
-        }
+        };
     },
 
     handleConvoResponse: function(response) {
@@ -107,7 +110,7 @@ export default Ember.Service.extend(Ember.Evented, {
 
         isSameMsg = true;
         for (var i = 0; i < encMsg.message.length; i++) {
-            if (encMsg.message[i] != pr.sentMessage[i]) {
+            if (encMsg.message[i] !== pr.sentMessage[i]) {
                 isSameMsg = false;
                 break;
             }
@@ -125,7 +128,7 @@ export default Ember.Service.extend(Ember.Evented, {
         nonce[23] = this.theirRole();
         msgData = nacl.crypto_box_open(encMsg.message, nonce, this.getTheirPublicKeyBytes(), this.get('session').getPrivateKeyBytes());
 
-        if (msgData[0] == 1) {
+        if (msgData[0] === 1) {
             body = nacl.decode_latin1(msgData.slice(1));
             console.log('Received message: ' + body);
             this.trigger('receivedMessage', body, response.Round);
@@ -144,7 +147,7 @@ export default Ember.Service.extend(Ember.Evented, {
 
         for (var i = 0; i < myKey.length; i++) {
             if (myKey[i] !== theirKey[i]) {
-                return 0
+                return 0;
             }
         }
         return 1;
@@ -156,9 +159,9 @@ export default Ember.Service.extend(Ember.Evented, {
 
         for (var i = myKey.length - 1; i >= 0; i--) {
             if (myKey[i] < theirKey[i]) {
-                return 0
+                return 0;
             } else if (myKey[i] > theirKey[i]) {
-                return 1
+                return 1;
             }
         }
         return 1;
@@ -170,9 +173,9 @@ export default Ember.Service.extend(Ember.Evented, {
 
         for (var i = myKey.length - 1; i >= 0; i--) {
             if (theirKey[i] < myKey[i]) {
-                return 0
+                return 0;
             } else if (theirKey[i] > myKey[i]) {
-                return 1
+                return 1;
             }
         }
         return 1;

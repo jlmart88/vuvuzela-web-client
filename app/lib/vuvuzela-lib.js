@@ -1,5 +1,3 @@
-import onionbox from './onionbox';
-
 export default {
     sizeIntro: 36,
     sizeEncryptedIntro: 84, // 48 (onionbox.overhead) + 36 (sizeIntro)
@@ -139,7 +137,6 @@ export default {
         var buf = new Uint8Array(10),
             numCpy = Math.abs(Math.floor(num)),
             var64 = new Uint8Array(8),
-            index = 0,
             tmp1,
             tmp2;
 
@@ -147,7 +144,7 @@ export default {
         for (var i = 0; i < 8; i++){
             if (num < 1) {
                 var64[i] = ~(numCpy & 255);
-                if (i == 0) {
+                if (i === 0) {
                     var64[i] = var64[i] + 1;
                 }
             } else {
@@ -158,7 +155,7 @@ export default {
 
         // shift left 1
         tmp1 = 0;
-        for (var i = 0; i < 8; i++){
+        for (i = 0; i < 8; i++){
             tmp2 = (var64[i] >> 7) & 1;
             var64[i] = (var64[i] << 1) + tmp1;
             tmp1 = tmp2; 
@@ -166,19 +163,19 @@ export default {
 
         // invert if negative
         if (num < 1) {
-            for (var i = 0; i < 8; i++){
+            for (i = 0; i < 8; i++){
                 var64[i] = ~var64[i];
             }
         }
 
         // encode
         tmp1 = 0;
-        for (var i = 0; i < 8; i++){
+        for (i = 0; i < 8; i++){
             tmp2 = ((var64[i] << i) & 127) + tmp1;
             tmp1 = (var64[i] >>> 7-i) & 255;
 
             if (i < 7) {
-                if (var64[i+1] != 0 || tmp1 != 0) {
+                if (var64[i+1] !== 0 || tmp1 !== 0) {
                     tmp2 = tmp2 | 128;
                 }
             }
@@ -199,11 +196,11 @@ export default {
         for (var i = 0; i < arr.length; i++) {
             arrStr = (arr[i] & 127).toString(2);
             while (arrStr.length < 7) {
-                arrStr = "0" + arrStr
+                arrStr = "0" + arrStr;
             }
             if (arr[i] < 128) {
-                if (i > 9 || i == 9 && arr[i] > 1) {
-                    throw "Varint Decode Overflow error"
+                if (i > 9 || i === 9 && arr[i] > 1) {
+                    throw "Varint Decode Overflow error";
                 }
                 numStr =  arrStr + numStr;
                 break;
@@ -211,12 +208,12 @@ export default {
             numStr = arrStr + numStr;
         }
 
-        while (numStr.length % 8 != 0){
+        while (numStr.length % 8 !== 0){
             numStr = "0" + numStr;
         } 
 
         // copy into uint64 array
-        for (var i = 0; i < 8; i++){
+        for (i = 0; i < 8; i++){
             if (numStr > 0) {
                 var64[i] = parseInt(numStr.slice(numStr.length - 8, numStr.length), 2);
                 numStr = numStr.slice(0, numStr.length-8);
@@ -227,7 +224,7 @@ export default {
 
         // shift right 1
         tmp1 = 0;
-        for (var i = 7; i >= 0; i--){
+        for (i = 7; i >= 0; i--){
             tmp2 = (var64[i] & 1) << 7;
             var64[i] = (var64[i] >>> 1) + tmp1;
             tmp1 = tmp2; 
@@ -235,21 +232,21 @@ export default {
 
         // invert if negative
         if (tmp1 > 0) {
-            for (var i = 0; i < 8; i++){
+            for (i = 0; i < 8; i++){
                 var64[i] = ~var64[i];
             }
             // twos complement to return value
-            for (var i = 0; i < 8; i++){
+            for (i = 0; i < 8; i++){
                 var64[i] = ~var64[i];
-                if (i == 0) {
-                    var64[0] = var64[0] + 1
+                if (i === 0) {
+                    var64[0] = var64[0] + 1;
                 }
             }
         }
 
         num = 0;
         // copy out of uint64 array
-        for (var i = 0; i < 8; i++){
+        for (i = 0; i < 8; i++){
             num = num | var64[i] << (i * 8);
         }
         if (tmp1 > 0) {
@@ -258,4 +255,4 @@ export default {
             return num;
         }
     }
-}
+};

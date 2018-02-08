@@ -1,4 +1,5 @@
 import config from '../config/environment';
+import Ember from 'ember';
 
 export default Ember.Service.extend(Ember.Evented, {
     websockets: Ember.inject.service(),
@@ -14,7 +15,7 @@ export default Ember.Service.extend(Ember.Evented, {
         var ws;
 
         if (this.get('ws')){
-            this.get('ws').reconnect()
+            this.get('ws').reconnect();
         } else {
             this.set('ws', this.get('websockets').socketFor(config.wsAddress + '/ws?publickey=' + this.get('session').get('myPublicKey')));
         
@@ -27,7 +28,7 @@ export default Ember.Service.extend(Ember.Evented, {
         }
     },
      
-    myOpenHandler: function(event) {
+    myOpenHandler: function() {
         console.log('Connected to server');
         this.set('isConnected', true);
         this.trigger('connected');
@@ -55,13 +56,13 @@ export default Ember.Service.extend(Ember.Evented, {
         }
     },
 
-    myCloseHandler: function(event) {
+    myCloseHandler: function() {
         console.log('Disconnected from server');
         this.set('isConnected', false);
         this.trigger('closed');
     },
 
-    myErrorHandler: function(event) {
+    myErrorHandler: function() {
         console.log('Websocket error');
         this.trigger('error');
     },
