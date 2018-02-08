@@ -1,5 +1,11 @@
 # Vuvuzela-web
 
+## WARNING: OUTDATED
+
+This client was built to function with a version of Vuvuzela from 2015 (before integration with Alpenhorn), and it has not been updated since. It has not been officially integrated with the rest of the Vuvuzela ecosystem, and is not currently being maintained by the Vuvuzela project owners. - jlmart88 (02/08/2018)
+
+---
+
 This is a browser implementation of the client for [Vuvuzela](https://github.com/davidlazar/vuvuzela), a private messaging system.
 
 ![client](https://github.com/jlmart88/vuvuzela-web-client/blob/master/screenshots/client.png)
